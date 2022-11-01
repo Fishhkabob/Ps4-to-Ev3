@@ -1,3 +1,33 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@Fishhkabob 
+Fishhkabob
+/
+Ps4-to-Ev3
+Public
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+Settings
+Ps4-to-Ev3/main.py /
+@wespd
+wespd The base line code
+…
+Latest commit c01ec29 5 days ago
+ History
+ 1 contributor
+83 lines (64 sloc)  2.36 KB
+
 #!/usr/bin/env pybricks-micropython
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor,
                                  InfraredSensor, UltrasonicSensor, GyroSensor)
@@ -37,11 +67,7 @@ def scale(val, src, dst):
     return (float(val-src[0]) / (src[1]-src[0])) * (dst[1]-dst[0])+dst[0]
 
 
-# Open the Gamepad event file:
-# /dev/input/event3 is for PS3 gamepad
-# /dev/input/event4 is for PS4 gamepad
-# look at contents of /proc/bus/input/devices if either one of them doesn't work.
-# use 'cat /proc/bus/input/devices' and look for the event file.
+#ps4 mapping
 infile_path = "/dev/input/event4"
 
 # open file in binary mode
@@ -57,11 +83,17 @@ while event:
     (tv_sec, tv_usec, ev_type, code, value) = struct.unpack(FORMAT, event)
     
     if ev_type == 1: # A button was pressed or released.
-        if code == 310 and value == 1:
+        if code == 318 and value == 1:
             right = 85
             print(steer_motor.angle())
-        if code == 311 and value == 1:
+        if code == 317 and value == 1:
             right = -100
+            print(steer_motor.angle())
+        if code == 318 and code == 317 and value == 1:
+            right = -100
+            print(steer_motor.angle())
+         if code == 318 and code == 317  and value == 0:
+            right = 0
             print(steer_motor.angle())
             
     elif ev_type == 3: # Stick was moved
